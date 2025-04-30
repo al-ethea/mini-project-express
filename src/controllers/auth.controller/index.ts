@@ -1,15 +1,15 @@
-import { NextFunction, Request, Response } from 'express';
-import { prisma } from '../../connection';
-import { hashPassword } from '@/utils/hash.password';
-import { comparePassword } from '@/utils/compare.password';
-import { jwtSign } from '@/utils/jwt.sign';
-import { generateReferralCode } from '@/utils/generate.referral.code';
+import { NextFunction, Request, Response } from "express";
+import { prisma } from "../../connection";
+import { hashPassword } from "../../utils/hash.password";
+import { comparePassword } from "../../utils/compare.password";
+import { jwtSign } from "../../utils/jwt.sign";
+import { generateReferralCode } from "../../utils/generate.referral.code";
 
 // kalo mau olah data dari berbagai table, gunakan prisma.$transaction
 export const registerUser = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   try {
     const { firstName, lastName, email, postcode, password } = req.body;
@@ -20,7 +20,7 @@ export const registerUser = async (
     });
 
     if (findUserByEmail !== null) {
-      throw { isExpose: true, status: 401, message: 'Email already exist' };
+      throw { isExpose: true, status: 401, message: "Email already exist" };
     }
 
     const hashedPassword = await hashPassword(password);
@@ -44,7 +44,7 @@ export const registerUser = async (
         email,
         postcode,
         password: hashedPassword,
-        role: 'ATTENDEE',
+        role: "ATTENDEE",
         referralCode,
         totalPoints: 0,
       },
@@ -63,7 +63,7 @@ export const registerUser = async (
 export const loginUser = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   try {
     const { email, password } = req.body;
@@ -75,27 +75,25 @@ export const loginUser = async (
     // console.log(findUserByEmail);
 
     if (findUserByEmail === null) {
-      throw { isExpose: true, status: 401, message: 'Email not found' };
+      throw { isExpose: true, status: 401, message: "Email not found" };
     }
 
     const isPasswordMatch = await comparePassword(
       findUserByEmail?.password,
-      password,
+      password
     );
 
     if (isPasswordMatch === false) {
-      throw { isExpose: true, status: 401, message: 'Invalid password' };
+      throw { isExpose: true, status: 401, message: "Invalid password" };
     }
     const token = jwtSign({
       userId: findUserByEmail.id,
       userRole: findUserByEmail.role,
     });
 
-    // console.log(token);
-
     res.status(200).json({
       success: true,
-      message: 'Login successfully',
+      message: "Login successfully",
       data: {
         token,
         email: findUserByEmail.email,
@@ -110,7 +108,7 @@ export const loginUser = async (
 export const sessionLoginUser = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   try {
     const { payload } = req.body;
@@ -121,9 +119,9 @@ export const sessionLoginUser = async (
 
     res.status(200).json({
       success: true,
-      message: 'Session login successfully',
+      message: "Session login successfully",
       data: {
-        token: req.headers.authorization?.split(' ')[1],
+        token: req.headers.authorization?.split(" ")[1],
         email: findUserByUserId?.email,
         role: findUserByUserId?.role,
       },
@@ -133,44 +131,35 @@ export const sessionLoginUser = async (
   }
 };
 
+// done
 export const registerOrganizer = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   try {
     const { companyName, address, phoneNumber } = req.body;
-    const userId = req.body.payload;
+    const { userId } = req.body.payload;
 
-    const result = prisma.$transaction(async (tx) => {
-      if (!userId) {
-        throw { isExpose: true, status: 401, message: 'Unauthorized' };
-      }
+    if (!userId) {
+      throw { isExpose: true, status: 401, message: "Unauthorized" };
+    }
 
-      // Find user
-      const user = await tx.user.findFirst({
-        where: { id: userId },
-      });
+    // Check if already organizer
+    const existingProfile = await prisma.organizerProfile.findFirst({
+      where: { userId: userId },
+    });
 
-      if (!user) {
-        throw { isExpose: true, status: 404, message: 'User not found' };
-      }
-
-      // Check if already organizer
-      const existingProfile = await prisma.organizerProfile.findFirst({
-        where: { userId: userId },
-      });
-
-      if (existingProfile) {
-        throw {
-          isExpose: true,
-          status: 400,
-          message: 'Organizer profile already exists',
-        };
-      }
-
+    if (existingProfile) {
+      throw {
+        isExpose: true,
+        status: 400,
+        message: "Organizer profile already exists",
+      };
+    }
+    const result = await prisma.$transaction(async (tx: any) => {
       // Create organizer profile
-      const organizerProfile = await tx.organizerProfile.create({
+      await tx.organizerProfile.create({
         data: {
           companyName,
           address,
@@ -179,18 +168,19 @@ export const registerOrganizer = async (
         },
       });
 
-      // (Optional) Update user role to ORGANIZER immediately
+      // Update user role to ORGANIZER immediately
       return await tx.user.update({
         where: { id: userId },
         data: {
-          role: 'ORGANIZER',
+          role: "ORGANIZER",
         },
       });
     });
+    console.log(result);
 
     res.status(201).json({
       success: true,
-      message: 'Organizer profile created successfully',
+      message: "Organizer profile created successfully",
       data: result,
     });
   } catch (error) {
@@ -198,4 +188,5 @@ export const registerOrganizer = async (
   }
 };
 
+// buat organizer profile
 // export const verifyEmail = async () => {};
