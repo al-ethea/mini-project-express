@@ -4,6 +4,7 @@ import { hashPassword } from "../../utils/hash.password";
 import { comparePassword } from "../../utils/compare.password";
 import { jwtSign } from "../../utils/jwt.sign";
 import { generateReferralCode } from "../../utils/generate.referral.code";
+import { AppError } from "../../utils/app.error";
 
 // kalo mau olah data dari berbagai table, gunakan prisma.$transaction
 export const registerUser = async (
@@ -75,7 +76,7 @@ export const loginUser = async (
     // console.log(findUserByEmail);
 
     if (findUserByEmail === null) {
-      throw { isExpose: true, status: 401, message: "Email not found" };
+      throw AppError("Email not found", 401);
     }
 
     const isPasswordMatch = await comparePassword(
@@ -84,8 +85,9 @@ export const loginUser = async (
     );
 
     if (isPasswordMatch === false) {
-      throw { isExpose: true, status: 401, message: "Invalid password" };
+      throw AppError("Invalid password", 401);
     }
+
     const token = jwtSign({
       userId: findUserByEmail.id,
       userRole: findUserByEmail.role,
@@ -142,7 +144,7 @@ export const registerOrganizer = async (
     const { userId } = req.body.payload;
 
     if (!userId) {
-      throw { isExpose: true, status: 401, message: "Unauthorized" };
+      throw AppError("User ID not found", 401);
     }
 
     // Check if already organizer
@@ -151,11 +153,7 @@ export const registerOrganizer = async (
     });
 
     if (existingProfile) {
-      throw {
-        isExpose: true,
-        status: 400,
-        message: "Organizer profile already exists",
-      };
+      throw AppError("Organizer profile already exists", 400);
     }
     const result = await prisma.$transaction(async (tx: any) => {
       // Create organizer profile
@@ -176,7 +174,7 @@ export const registerOrganizer = async (
         },
       });
     });
-    console.log(result);
+    // console.log(result);
 
     res.status(201).json({
       success: true,
@@ -189,4 +187,35 @@ export const registerOrganizer = async (
 };
 
 // buat organizer profile
-// export const verifyEmail = async () => {};
+export const verifyEmailOrganizer = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { userId } = req.body.payload;
+    //hasil token yg sdh di-decode
+
+    const findUserByUserId = await prisma.user.findFirst({
+      where: { id: userId, role: "ORGANIZER" },
+    });
+
+    if (findUserByUserId === null) {
+      throw AppError("User not found", 401);
+    }
+
+    // Update the user's isVerified field to true
+    await prisma.organizerProfile.update({
+      data: { verified: true },
+      where: { id: userId },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Email verified successfully",
+      data: null,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

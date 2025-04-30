@@ -49,7 +49,7 @@ const users = [
     postcode: "12345",
     password: "password123",
     role: "ATTENDEE",
-    referralCode: "ALICE123",
+    referralCode: "ALI123",
     totalPoints: 0,
   },
   {
@@ -69,7 +69,7 @@ const users = [
     postcode: "10101",
     password: "password123",
     role: "ATTENDEE",
-    referralCode: "LATRIEL789",
+    referralCode: "LAT789",
     totalPoints: 0,
   },
   {
@@ -79,7 +79,7 @@ const users = [
     postcode: "10202",
     password: "secure456",
     role: "ORGANIZER",
-    referralCode: "BENJAMIN101",
+    referralCode: "BEN101",
     totalPoints: 0,
   },
   {
@@ -89,12 +89,33 @@ const users = [
     postcode: "10303",
     password: "abc123xyz",
     role: "ATTENDEE",
-    referralCode: "CARLA202",
+    referralCode: "CAR202",
     totalPoints: 0,
   },
 ];
 
 const event = [];
+
+const organizerProfile = [
+  {
+    companyName: "Star Events Co.",
+    address: "123 Galaxy Avenue, New York, NY",
+    phoneNumber: "+1-555-1234",
+    verified: true,
+  },
+  {
+    companyName: "Star Events Co.",
+    address: "123 Galaxy Avenue, New York, NY",
+    phoneNumber: "+1-555-1234",
+    verified: false,
+  },
+  {
+    companyName: "Star Events Co.",
+    address: "123 Galaxy Avenue, New York, NY",
+    phoneNumber: "+1-555-1234",
+    verified: false,
+  },
+];
 
 // async function main() {
 //   artist.forEach(async (item) => {
