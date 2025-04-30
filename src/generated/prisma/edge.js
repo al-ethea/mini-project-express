@@ -258,7 +258,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\Dell\\OneDrive\\Documents\\JCWD 3202\\mini-project\\api\\src\\generated\\prisma",
+      "value": "/Users/jessechristianmambu/Documents/Purwadhika/mini project/mini-project-express/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -267,12 +267,12 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "darwin",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\Dell\\OneDrive\\Documents\\JCWD 3202\\mini-project\\api\\prisma\\schema.prisma",
+    "sourceFilePath": "/Users/jessechristianmambu/Documents/Purwadhika/mini project/mini-project-express/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -286,6 +286,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
