@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient } = require('../src/generated/prisma');
 const prisma = new PrismaClient();
+
 
 // to hash password
 const hashPassword = async (password) => {
@@ -94,7 +95,33 @@ const users = [
   },
 ];
 
-const event = [];
+const event = [
+  {
+    name: "Coldplay Concert",
+    city: "Jakarta",
+    venue: "GBK Stadium",
+    date: new Date("2024-11-15T19:00:00"),
+    category: "Pop",
+    price: 1500000,
+    description: "Coldplay Music of the Spheres World Tour",
+    availableSeats: 50000,
+    type: "PAID",
+    artistId: 1, // Pastikan ID artist sudah ada
+    organizerProfileId: 1 // Pastikan ID organizer profile sudah ada
+  },
+  {
+    name: "Lady Gaga",
+    city: "Singapore",
+    venue: "National Stadium",
+    date: new Date("2024-09-20T15:00:00"),
+    category: "Pop",
+    price: 1000000,
+    description: "Lady Gaga in Singapore",
+    availableSeats: 10000,
+    type: "PAID",
+    artistId: 2,
+    organizerProfileId: 1
+  }];
 
 const organizerProfile = [
   {
@@ -152,6 +179,12 @@ async function main() {
   //       data: item,
   //     });
   //   }
+  
+  for (const item of event) {
+    await prisma.event.create({
+      data: item,
+    });
+  }
 }
 
 main()

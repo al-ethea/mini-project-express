@@ -102,3 +102,32 @@ export const registerEvent = async (
     next(error);
   }
 };
+
+
+export const eventDisplayLists = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try{
+    const displayEvents = await prisma.event.findMany({
+      select: {
+        id: true,
+        name: true,
+        bannerUrl: true,
+        city: true,
+        venue: true,
+        date: true,
+        category: true,
+        description: true,
+        availableSeats: true,
+      },
+    });
+
+    res.status(200).json({
+      data: displayEvents
+    })
+  }catch (error) {
+    next(error);
+  }
+}
