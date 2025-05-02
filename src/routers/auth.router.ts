@@ -1,7 +1,6 @@
 import {
   loginUser,
   sessionLoginUser,
-  registerOrganizer,
   registerUser,
 } from "../controllers/auth.controller";
 import { registerUserValidator } from "../middlewares/express.validator/auth.validator";
@@ -19,6 +18,6 @@ authRouter.post(
 );
 authRouter.post("/login", loginUser);
 authRouter.get("/session-login", jwtDecode, sessionLoginUser);
-authRouter.post("/register-organizer", jwtDecode, registerOrganizer);
+// tes verify email lg dr awal
 
 export default authRouter;
