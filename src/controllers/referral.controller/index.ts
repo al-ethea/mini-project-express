@@ -1,4 +1,3 @@
-// use referral code
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../../connection";
 import { addMonths } from "../../utils/calculate.expiration.date";
@@ -77,28 +76,6 @@ export const applyReferral = async (
     });
   } catch (error) {
     // console.log("CTCH");
-    next(error);
-  }
-};
-
-// attendee only
-export const registerEvent = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    // get user referral if they hve
-    // find event
-    // 1. Apply 10% discount if they have a referral discount
-    // 2. Apply points if user wants to
-    // 3. Create Registration
-    res.status(200).json({
-      success: true,
-      message: "Registered successfully.",
-      data: null,
-    });
-  } catch (error) {
     next(error);
   }
 };
