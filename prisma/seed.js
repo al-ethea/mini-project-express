@@ -76,7 +76,7 @@ const users = [
   {
     firstName: "Benjamin",
     lastName: "Stone",
-    email: "ben.stone@example.com",
+    email: "jigisoj435@harinv.com",
     postcode: "10202",
     password: "secure456",
     role: "ORGANIZER",
@@ -92,6 +92,23 @@ const users = [
     role: "ATTENDEE",
     referralCode: "CAR202",
     totalPoints: 0,
+  },
+  {
+    firstName: "Alex",
+    lastName: "Johnson",
+    postcode: "78965",
+    email: "sosed84911@miracle3.com",
+    password: "Pass123!",
+    role: "ATTENDEE",
+    referralCode: "QNI692",
+    totalPoints: 0,
+  },
+  {
+    firstName: "David",
+    lastName: "Miller",
+    postcode: "90210",
+    email: "sowome1174@harinv.com",
+    password: "SafePass789!",
   },
 ];
 
@@ -129,18 +146,6 @@ const organizerProfile = [
     address: "123 Galaxy Avenue, New York, NY",
     phoneNumber: "+1-555-1234",
     verified: true,
-  },
-  {
-    companyName: "Star Events Co.",
-    address: "123 Galaxy Avenue, New York, NY",
-    phoneNumber: "+1-555-1234",
-    verified: false,
-  },
-  {
-    companyName: "Star Events Co.",
-    address: "123 Galaxy Avenue, New York, NY",
-    phoneNumber: "+1-555-1234",
-    verified: false,
   },
 ];
 
