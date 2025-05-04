@@ -7,7 +7,7 @@ import {
 
 const organizerRouter = Router();
 
-organizerRouter.post("/register-organizer", jwtDecode, registerOrganizer);
-organizerRouter.post("/verify-organizer", jwtDecode, verifyEmailOrganizer);
+organizerRouter.post("/register", jwtDecode, registerOrganizer);
+organizerRouter.post("/verify-email", jwtDecode, verifyEmailOrganizer);
 
 export default organizerRouter;

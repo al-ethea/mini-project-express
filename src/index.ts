@@ -3,6 +3,7 @@ import cors from "cors";
 import authRouter from "./routers/auth.router";
 import referralRouter from "./routers/referral.router";
 import organizerRouter from "./routers/organizer.router";
+import eventRouter from "./routers/event.router";
 
 const app: Express = express();
 const port = 5005;
@@ -21,6 +22,7 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/api/auth", authRouter);
 app.use("/api/referral", referralRouter);
 app.use("/api/organizer", organizerRouter);
+app.use("/api/event", eventRouter);
 
 // Centralized Error
 interface IError extends Error {
