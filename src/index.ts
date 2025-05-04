@@ -1,7 +1,6 @@
 import express, { Express, NextFunction, Request, Response } from "express";
 import cors from "cors";
 import authRouter from "./routers/auth.router";
-import userRouter from "./routers/user.router";
 import referralRouter from "./routers/referral.router";
 import organizerRouter from "./routers/organizer.router";
 import eventRouter from "./routers/event.router";
@@ -20,13 +19,9 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/auth", authRouter);
-app.use("/api/users", userRouter);
-app.use("/api/events", eventRouter);
-// app.use("/api/users", userRouter);
-app.use("/api/auth", authRouter);
 app.use("/api/referral", referralRouter);
 app.use("/api/organizer", organizerRouter);
-app.use("/api/event", eventRouter);
+app.use("/api/events", eventRouter);
 
 // Centralized Error
 interface IError extends Error {
