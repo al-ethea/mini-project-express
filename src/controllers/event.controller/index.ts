@@ -3,7 +3,7 @@ import { prisma } from "../../connection";
 import { AppError } from "../../utils/app.error";
 
 // fetch all events for organizer
-//done
+// done
 export const getCreatedEvents = async (
   req: Request,
   res: Response,
