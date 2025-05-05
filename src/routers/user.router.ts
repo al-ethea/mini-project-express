@@ -1,9 +1,8 @@
-import { applyReferral} from "../controllers/user.controller";
-import { jwtDecode } from "../middlewares/jwt.decode";
 import { Router } from "express";
-
+import { jwtDecode } from "../middlewares/jwt.decode";
+import { displayUserProfile } from "../controllers/user.controller";
 const userRouter = Router();
 
-userRouter.post("/apply-referral", jwtDecode, applyReferral);
+userRouter.get("/", jwtDecode, displayUserProfile);
 
 export default userRouter;
