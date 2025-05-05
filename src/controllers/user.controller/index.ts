@@ -109,8 +109,15 @@ export const eventDisplayLists = async (
   res: Response,
   next: NextFunction
 ) => {
-  try{
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 8;
+    const skip = (page - 1) * limit;
+
     const displayEvents = await prisma.event.findMany({
+      skip,
+      take: limit,
+      orderBy: { date: "asc" },
       select: {
         id: true,
         name: true,
@@ -124,10 +131,17 @@ export const eventDisplayLists = async (
       },
     });
 
+    const totalEvents = await prisma.event.count();
+
     res.status(200).json({
-      data: displayEvents
-    })
-  }catch (error) {
+      data: displayEvents,
+      meta: {
+        total: totalEvents,
+        page,
+        totalPages: Math.ceil(totalEvents / limit),
+      },
+    });
+  } catch (error) {
     next(error);
   }
-}
+};

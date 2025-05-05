@@ -64,3 +64,27 @@ export const createEvent = async (
     next(error);
   }
 };
+
+
+export const getEventById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const id = Number(req.params.id);
+    if (isNaN(id)) return res.status(400).json({ message: "Invalid Event Id" });
+
+    const event = await prisma.event.findUnique({ where: { id } });
+    if (!event) return res.status(404).json({ message: `Event with id ${id} not found` });
+
+    res.status(200).json({
+      success: true,
+      message: `Event with id ${id} found`,
+      data: event,
+    })
+  } catch (error) {
+    next(error);
+  }
+    
+};
