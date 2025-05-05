@@ -12,6 +12,9 @@ export const displayUserProfile = async (
 
     const findUserById = await prisma.user.findFirst({
       where: { id: userId },
+      include: {
+        referredTo: true,
+      },
     });
     res.status(201).json({
       success: true,
