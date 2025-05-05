@@ -4,6 +4,7 @@ import authRouter from "./routers/auth.router";
 import referralRouter from "./routers/referral.router";
 import organizerRouter from "./routers/organizer.router";
 import eventRouter from "./routers/event.router";
+import userRouter from "./routers/user.router";
 
 const app: Express = express();
 const port = 5005;
@@ -22,8 +23,8 @@ app.use("/api/auth", authRouter);
 app.use("/api/referral", referralRouter);
 app.use("/api/organizer", organizerRouter);
 app.use("/api/events", eventRouter);
+app.use("/api/users", userRouter);
 
-// Centralized Error
 interface IError extends Error {
   isExpose: boolean;
   status: number;

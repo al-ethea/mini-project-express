@@ -4,6 +4,6 @@ import { Router } from "express";
 
 const referralRouter = Router();
 
-referralRouter.post("/apply-referral", jwtDecode, applyReferral);
+referralRouter.post("/apply", jwtDecode, applyReferral);
 
 export default referralRouter;
