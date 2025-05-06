@@ -13,7 +13,12 @@ import { verifiedOrganizerOnly } from "../middlewares/auth.guard/verifiedOrganiz
 const eventRouter = Router();
 
 eventRouter.get("/all-events", eventDisplayLists, carouselEvents);
-eventRouter.post("/create-events", createEvent); //hrsnya ada jwt decode dan verified organizer only
+eventRouter.post(
+  "/create-events",
+  jwtDecode,
+  verifiedOrganizerOnly,
+  createEvent
+); //hrsnya ada jwt decode dan verified organizer only
 eventRouter.get("/", jwtDecode, verifiedOrganizerOnly, getCreatedEvents);
 eventRouter.get("/:id", getEventById);
 eventRouter.post("/register-event", eventRegistration);
