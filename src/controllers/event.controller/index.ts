@@ -3,6 +3,8 @@
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../../connection";
 import { AppError } from "../../utils/app.error";
+import jwt from 'jsonwebtoken';
+import bodyParser from 'body-parser';
 
 // fetch all events for organizer
 // done
@@ -158,7 +160,6 @@ export const eventDisplayLists = async (
   }
 };
 
-
 export const getEventById = async (
   req: Request,
   res: Response,
@@ -169,16 +170,94 @@ export const getEventById = async (
     if (isNaN(id)) return res.status(400).json({ message: "Invalid Event Id" });
 
     const event = await prisma.event.findUnique({ where: { id } });
-    if (!event) return res.status(404).json({ message: `Event with id ${id} not found` });
+    if (!event)
+      return res.status(404).json({ message: `Event with id ${id} not found` });
 
     res.status(200).json({
       success: true,
       message: `Event with id ${id} found`,
       data: event,
-    })
+    });
   } catch (error) {
     next(error);
   }
-    
 };
 
+
+export const eventRegistration = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const {
+      eventId,
+      userId,
+      quantity,
+      usedPoints,
+      tax,
+      referralId,
+      pointsHistoryId,
+      discountUsed
+    } = req.body;
+
+    if (!eventId || !userId || !quantity || !referralId || !pointsHistoryId) {
+      return res.status(400).json({
+        success: false,
+        message: "Required fields are missing.",
+      });
+    }
+
+    const newRegistration = await prisma.registration.create({
+      data: {
+        eventId: Number(eventId),
+        userId,
+        quantity: Number(quantity),
+        usedPoints: Number(usedPoints) || 0,
+        tax: Number(tax) || 0,
+        referralId: Number(referralId),
+        pointsHistoryId: Number(pointsHistoryId),
+        discountUsed: Boolean(discountUsed) || false,
+      },
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "Registration successful",
+      data: newRegistration,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// controllers/event.controller.ts
+export const carouselEvents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const limit = parseInt(req.query.limit as string) || 6;
+    
+    // Contoh: Ambil event yang akan datang, bisa disesuaikan dengan kebutuhan
+    const carouselEvents = await prisma.event.findMany({
+      take: limit,
+      where: {
+        date: {
+          gte: new Date() // Hanya event yang tanggalnya belum lewat
+        }
+      },
+      orderBy: { date: "asc" },
+      select: {
+        id: true,
+        name: true,
+        bannerUrl: true
+      }
+    });
+
+    res.status(200).json(carouselEvents);
+  } catch (error) {
+    next(error);
+  }
+};

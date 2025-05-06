@@ -21,6 +21,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/events", eventRouter);
 
+
 // Centralized Error
 interface IError extends Error {
   isExpose: boolean;
