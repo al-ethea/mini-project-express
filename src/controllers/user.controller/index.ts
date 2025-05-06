@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../../connection";
-import { AppError } from "../../utils/app.error";
 
 export const displayUserProfile = async (
   req: Request,
