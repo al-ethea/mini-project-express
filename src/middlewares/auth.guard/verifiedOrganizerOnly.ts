@@ -7,12 +7,12 @@ export const verifiedOrganizerOnly = (
   next: NextFunction
 ) => {
   try {
-    const { userRole, isVerified } = req.body.payload;
+    const { userRole, verified } = req.body.payload;
     console.log(userRole);
     if (userRole !== "ORGANIZER") {
       throw AppError("You are unauthorized", 403);
     }
-    if (isVerified === false) {
+    if (verified === false) {
       throw AppError("You are not verified yet", 403);
     }
 

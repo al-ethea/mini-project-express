@@ -102,6 +102,7 @@ model Transaction{
   paymentStatus PaymentStatus
   expireAt DateTime
   amountToBePaid Int
+  paymentReceiptUrl String?
 
   registrationId Int @unique
   registration Registration @relation(fields: [registrationId], references: [id])

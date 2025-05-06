@@ -133,7 +133,7 @@ export const loginUser = async (
     const token = jwtSign({
       userId: findUserByEmail.id,
       userRole: findUserByEmail.role,
-      isVerified: verifiedOrganizer?.verified,
+      verified: verifiedOrganizer?.verified,
     });
 
     res.status(200).json({

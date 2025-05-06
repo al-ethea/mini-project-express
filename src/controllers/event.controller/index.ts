@@ -5,6 +5,7 @@ import { prisma } from "../../connection";
 import { AppError } from "../../utils/app.error";
 import jwt from "jsonwebtoken";
 import bodyParser from "body-parser";
+import { cloudinaryUpload } from "../../utils/cloudinary.upload";
 
 // fetch all events for organizer
 // done
@@ -67,7 +68,6 @@ export const createEvent = async (
 
     const {
       name,
-      bannerUrl,
       city,
       venue,
       date,
@@ -100,10 +100,29 @@ export const createEvent = async (
       });
     }
 
+    // ===== Cloudinary Image Upload =====
+
+    const bannerUrl = [];
+    let files: Express.Multer.File[] | undefined;
+    if (req.files) {
+      // ambil file yg di-upload dr multer
+      files = Array.isArray(req.files) ? req.files : req.files["image"];
+
+      // upload multiple files ke cloudinary
+      for (const image of files) {
+        // console.log(image);
+        const result: any = await cloudinaryUpload(image.buffer);
+
+        console.log(result);
+        bannerUrl.push(result.res);
+      }
+    }
+    console.log(bannerUrl);
+
     const newEvent = await prisma.event.create({
       data: {
         name,
-        bannerUrl,
+        bannerUrl: bannerUrl[0],
         city,
         venue,
         date: formattedDate,

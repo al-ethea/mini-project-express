@@ -171,6 +171,7 @@ exports.Prisma.TransactionScalarFieldEnum = {
   paymentStatus: 'paymentStatus',
   expireAt: 'expireAt',
   amountToBePaid: 'amountToBePaid',
+  paymentReceiptUrl: 'paymentReceiptUrl',
   registrationId: 'registrationId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
