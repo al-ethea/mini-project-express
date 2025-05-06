@@ -25,6 +25,6 @@ eventRouter.post(
 );
 eventRouter.get("/", jwtDecode, verifiedOrganizerOnly, getCreatedEvents);
 eventRouter.get("/:id", getEventById);
-eventRouter.post("/register-event", eventRegistration);
+eventRouter.post("/:eventId/register", jwtDecode, eventRegistration);
 
 export default eventRouter;

@@ -5,7 +5,7 @@ export const expirySchedule = async () => {
   cron.schedule("* * * * *", async () => {
     console.log(`Running expiry job at ${new Date()}`);
     paymentExpiryJob();
-    expiryPointJob();
-    expiryDiscountCodeJob();
+    // expiryPointJob();
+    // expiryDiscountCodeJob();
   });
 };

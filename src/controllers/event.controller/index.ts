@@ -15,11 +15,12 @@ export const getCreatedEvents = async (
   next: NextFunction
 ) => {
   try {
-    const { organizerProfileId } = req.body.payload;
+    const { userId } = req.body.payload;
+    // console.log("Organizer Profile ID:", userId);
 
     const findOrganizerById = await prisma.organizerProfile.findFirst({
       where: {
-        userId: organizerProfileId,
+        userId: userId,
       },
     });
 
