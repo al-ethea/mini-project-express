@@ -27,6 +27,8 @@ app.use("/api/events", eventRouter);
 app.use("/api/users", userRouter);
 app.use("/api/points", pointsRouter);
 
+
+// Centralized Error
 interface IError extends Error {
   isExpose: boolean;
   status: number;
