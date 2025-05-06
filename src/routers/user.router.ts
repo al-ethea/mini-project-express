@@ -6,4 +6,5 @@ const userRouter = Router();
 userRouter.get("/", jwtDecode, displayUserProfile);
 userRouter.get("/:id", getUserById);
 
+
 export default userRouter;

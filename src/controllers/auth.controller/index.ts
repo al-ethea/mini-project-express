@@ -5,6 +5,9 @@ import { comparePassword } from "../../utils/compare.password";
 import { jwtSign } from "../../utils/jwt.sign";
 import { generateReferralCode } from "../../utils/generate.referral.code";
 import { AppError } from "../../utils/app.error";
+import { transporter } from "../../utils/transporter.mailer";
+import fs from "fs";
+import { compile } from "handlebars";
 
 // kalo mau olah data dari berbagai table, gunakan prisma.$transaction
 export const registerUser = async (
@@ -38,7 +41,7 @@ export const registerUser = async (
         referralCode = generateReferralCode(); // regenerate if conflict
       }
     }
-    await prisma.user.create({
+    const createdUser = await prisma.user.create({
       data: {
         firstName,
         lastName,
@@ -49,6 +52,30 @@ export const registerUser = async (
         referralCode,
         totalPoints: 0,
       },
+    });
+
+    const welcomeEmailTemplate = fs.readFileSync(
+      "./src/public/welcome-email.html",
+      "utf8"
+    );
+
+    const token = jwtSign({
+      userId: createdUser.id,
+    });
+
+    // is it possible to hve a link to automatically login to the app?
+    let welcomeEmailTemplateCompiled: any = compile(welcomeEmailTemplate);
+    welcomeEmailTemplateCompiled = welcomeEmailTemplateCompiled({
+      firstName: firstName,
+      lastName: lastName,
+      referralCode: referralCode,
+      loginUrl: `${process.env.LINK_VERIFY_EMAIL}/login`, //link login
+    });
+
+    await transporter.sendMail({
+      to: email,
+      subject: "Welcome to LiveNation",
+      html: welcomeEmailTemplateCompiled,
     });
 
     res.status(201).json({
@@ -127,93 +154,6 @@ export const sessionLoginUser = async (
         email: findUserByUserId?.email,
         role: findUserByUserId?.role,
       },
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// done
-export const registerOrganizer = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { companyName, address, phoneNumber } = req.body;
-    const { userId } = req.body.payload;
-
-    if (!userId) {
-      throw AppError("User ID not found", 401);
-    }
-
-    // Check if already organizer
-    const existingProfile = await prisma.organizerProfile.findFirst({
-      where: { userId: userId },
-    });
-
-    if (existingProfile) {
-      throw AppError("Organizer profile already exists", 400);
-    }
-    const result = await prisma.$transaction(async (tx: any) => {
-      // Create organizer profile
-      await tx.organizerProfile.create({
-        data: {
-          companyName,
-          address,
-          phoneNumber,
-          userId,
-        },
-      });
-
-      // Update user role to ORGANIZER immediately
-      return await tx.user.update({
-        where: { id: userId },
-        data: {
-          role: "ORGANIZER",
-        },
-      });
-    });
-    // console.log(result);
-
-    res.status(201).json({
-      success: true,
-      message: "Organizer profile created successfully",
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// buat organizer profile
-export const verifyEmailOrganizer = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { userId } = req.body.payload;
-    //hasil token yg sdh di-decode
-
-    const findUserByUserId = await prisma.user.findFirst({
-      where: { id: userId, role: "ORGANIZER" },
-    });
-
-    if (findUserByUserId === null) {
-      throw AppError("User not found", 401);
-    }
-
-    // Update the user's isVerified field to true
-    await prisma.organizerProfile.update({
-      data: { verified: true },
-      where: { id: userId },
-    });
-
-    res.status(200).json({
-      success: true,
-      message: "Email verified successfully",
-      data: null,
     });
   } catch (error) {
     next(error);

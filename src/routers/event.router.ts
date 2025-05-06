@@ -13,5 +13,4 @@ eventRouter.get("/:id", getEventById);
 eventRouter.post("/register-event", eventRegistration);
 
 
-
 export default eventRouter;
