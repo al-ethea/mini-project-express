@@ -25,6 +25,8 @@ export const registerOrganizer = async (
       where: { userId: userId },
     });
 
+    console.log(existingProfile);
+
     if (existingProfile) {
       throw AppError("Organizer profile already exists", 400);
     }
