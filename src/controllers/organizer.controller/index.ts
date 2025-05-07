@@ -129,3 +129,80 @@ export const verifyEmailOrganizer = async (
     next(error);
   }
 };
+
+export const displayEventStatisticsBasedOnOrganizer = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { userId } = req.body.payload; // Extract userId from the token payload
+    const organizerStats = await prisma.organizerProfile.findUnique({
+      where: {
+        userId: userId, // Use the logged-in user ID from the token payload
+      },
+      include: {
+        event: {
+          select: {
+            registrations: {
+              select: {
+                id: true, // Selecting registration ids to count them
+                transaction: {
+                  select: {
+                    id: true, // Selecting transaction ids to count them
+                    amountToBePaid: true, // To calculate total transaction amount
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!organizerStats) {
+      throw AppError("Organizer not found", 404);
+    }
+
+    // Calculate total registrations, transactions, and total amount paid
+    const totalRegistrations = organizerStats.event.reduce(
+      (acc, event) => acc + event.registrations.length,
+      0
+    );
+
+    const totalTransactions = organizerStats.event.reduce(
+      (acc, event) =>
+        acc +
+        event.registrations.reduce(
+          (sum, registration) => sum + (registration.transaction ? 1 : 0),
+          0
+        ),
+      0
+    );
+
+    const totalAmountPaid = organizerStats.event.reduce(
+      (acc, event) =>
+        acc +
+        event.registrations.reduce(
+          (sum, registration) =>
+            sum + (registration.transaction?.amountToBePaid || 0),
+          0
+        ),
+      0
+    );
+
+    // console.log("Total Registrations:", totalRegistrations);
+    // console.log("Total Transactions:", totalTransactions);
+    // console.log("Total Amount Paid:", totalAmountPaid);
+
+    res.status(200).json({
+      success: true,
+      message: "Event stats displayed successfully",
+      totalRegistrations,
+      totalTransactions,
+      totalAmountPaid,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
