@@ -130,8 +130,8 @@ model Registration{ // many
   referralId Int @unique
   referral Referral @relation(fields: [referralId], references: [id])
 
-  pointsHistoryId Int @unique
-  pointsHistory PointsHistory @relation(fields: [pointsHistoryId], references: [id])
+  pointsHistoryId Int? @unique
+  pointsHistory PointsHistory? @relation(fields: [pointsHistoryId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

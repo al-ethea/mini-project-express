@@ -7206,7 +7206,7 @@ export namespace Prisma {
     userId: string
     eventId: number
     referralId: number
-    pointsHistoryId: number
+    pointsHistoryId: number | null
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -7248,7 +7248,7 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     event?: boolean | EventDefaultArgs<ExtArgs>
     referral?: boolean | ReferralDefaultArgs<ExtArgs>
-    pointsHistory?: boolean | PointsHistoryDefaultArgs<ExtArgs>
+    pointsHistory?: boolean | Registration$pointsHistoryArgs<ExtArgs>
   }, ExtArgs["result"]["registration"]>
 
   export type RegistrationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -7267,7 +7267,7 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     event?: boolean | EventDefaultArgs<ExtArgs>
     referral?: boolean | ReferralDefaultArgs<ExtArgs>
-    pointsHistory?: boolean | PointsHistoryDefaultArgs<ExtArgs>
+    pointsHistory?: boolean | Registration$pointsHistoryArgs<ExtArgs>
   }, ExtArgs["result"]["registration"]>
 
   export type RegistrationSelectScalar = {
@@ -7290,13 +7290,13 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     event?: boolean | EventDefaultArgs<ExtArgs>
     referral?: boolean | ReferralDefaultArgs<ExtArgs>
-    pointsHistory?: boolean | PointsHistoryDefaultArgs<ExtArgs>
+    pointsHistory?: boolean | Registration$pointsHistoryArgs<ExtArgs>
   }
   export type RegistrationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     event?: boolean | EventDefaultArgs<ExtArgs>
     referral?: boolean | ReferralDefaultArgs<ExtArgs>
-    pointsHistory?: boolean | PointsHistoryDefaultArgs<ExtArgs>
+    pointsHistory?: boolean | Registration$pointsHistoryArgs<ExtArgs>
   }
 
   export type $RegistrationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7306,7 +7306,7 @@ export namespace Prisma {
       user: Prisma.$UserPayload<ExtArgs>
       event: Prisma.$EventPayload<ExtArgs>
       referral: Prisma.$ReferralPayload<ExtArgs>
-      pointsHistory: Prisma.$PointsHistoryPayload<ExtArgs>
+      pointsHistory: Prisma.$PointsHistoryPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -7317,7 +7317,7 @@ export namespace Prisma {
       userId: string
       eventId: number
       referralId: number
-      pointsHistoryId: number
+      pointsHistoryId: number | null
       createdAt: Date
       updatedAt: Date
       deletedAt: Date | null
@@ -7689,7 +7689,7 @@ export namespace Prisma {
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     event<T extends EventDefaultArgs<ExtArgs> = {}>(args?: Subset<T, EventDefaultArgs<ExtArgs>>): Prisma__EventClient<$Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     referral<T extends ReferralDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ReferralDefaultArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
-    pointsHistory<T extends PointsHistoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PointsHistoryDefaultArgs<ExtArgs>>): Prisma__PointsHistoryClient<$Result.GetResult<Prisma.$PointsHistoryPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    pointsHistory<T extends Registration$pointsHistoryArgs<ExtArgs> = {}>(args?: Subset<T, Registration$pointsHistoryArgs<ExtArgs>>): Prisma__PointsHistoryClient<$Result.GetResult<Prisma.$PointsHistoryPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8061,6 +8061,21 @@ export namespace Prisma {
      */
     include?: TransactionInclude<ExtArgs> | null
     where?: TransactionWhereInput
+  }
+
+  /**
+   * Registration.pointsHistory
+   */
+  export type Registration$pointsHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PointsHistory
+     */
+    select?: PointsHistorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PointsHistoryInclude<ExtArgs> | null
+    where?: PointsHistoryWhereInput
   }
 
   /**
@@ -11973,7 +11988,7 @@ export namespace Prisma {
     userId?: StringFilter<"Registration"> | string
     eventId?: IntFilter<"Registration"> | number
     referralId?: IntFilter<"Registration"> | number
-    pointsHistoryId?: IntFilter<"Registration"> | number
+    pointsHistoryId?: IntNullableFilter<"Registration"> | number | null
     createdAt?: DateTimeFilter<"Registration"> | Date | string
     updatedAt?: DateTimeFilter<"Registration"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Registration"> | Date | string | null
@@ -11981,7 +11996,7 @@ export namespace Prisma {
     user?: XOR<UserRelationFilter, UserWhereInput>
     event?: XOR<EventRelationFilter, EventWhereInput>
     referral?: XOR<ReferralRelationFilter, ReferralWhereInput>
-    pointsHistory?: XOR<PointsHistoryRelationFilter, PointsHistoryWhereInput>
+    pointsHistory?: XOR<PointsHistoryNullableRelationFilter, PointsHistoryWhereInput> | null
   }
 
   export type RegistrationOrderByWithRelationInput = {
@@ -11993,7 +12008,7 @@ export namespace Prisma {
     userId?: SortOrder
     eventId?: SortOrder
     referralId?: SortOrder
-    pointsHistoryId?: SortOrder
+    pointsHistoryId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
@@ -12024,7 +12039,7 @@ export namespace Prisma {
     user?: XOR<UserRelationFilter, UserWhereInput>
     event?: XOR<EventRelationFilter, EventWhereInput>
     referral?: XOR<ReferralRelationFilter, ReferralWhereInput>
-    pointsHistory?: XOR<PointsHistoryRelationFilter, PointsHistoryWhereInput>
+    pointsHistory?: XOR<PointsHistoryNullableRelationFilter, PointsHistoryWhereInput> | null
   }, "id" | "referralId" | "pointsHistoryId">
 
   export type RegistrationOrderByWithAggregationInput = {
@@ -12036,7 +12051,7 @@ export namespace Prisma {
     userId?: SortOrder
     eventId?: SortOrder
     referralId?: SortOrder
-    pointsHistoryId?: SortOrder
+    pointsHistoryId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
@@ -12059,7 +12074,7 @@ export namespace Prisma {
     userId?: StringWithAggregatesFilter<"Registration"> | string
     eventId?: IntWithAggregatesFilter<"Registration"> | number
     referralId?: IntWithAggregatesFilter<"Registration"> | number
-    pointsHistoryId?: IntWithAggregatesFilter<"Registration"> | number
+    pointsHistoryId?: IntNullableWithAggregatesFilter<"Registration"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"Registration"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Registration"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Registration"> | Date | string | null
@@ -12744,7 +12759,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutRegistrationsInput
     event: EventCreateNestedOneWithoutRegistrationsInput
     referral: ReferralCreateNestedOneWithoutRegistrationInput
-    pointsHistory: PointsHistoryCreateNestedOneWithoutRegistrationInput
+    pointsHistory?: PointsHistoryCreateNestedOneWithoutRegistrationInput
   }
 
   export type RegistrationUncheckedCreateInput = {
@@ -12756,7 +12771,7 @@ export namespace Prisma {
     userId: string
     eventId: number
     referralId: number
-    pointsHistoryId: number
+    pointsHistoryId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -12775,7 +12790,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutRegistrationsNestedInput
     event?: EventUpdateOneRequiredWithoutRegistrationsNestedInput
     referral?: ReferralUpdateOneRequiredWithoutRegistrationNestedInput
-    pointsHistory?: PointsHistoryUpdateOneRequiredWithoutRegistrationNestedInput
+    pointsHistory?: PointsHistoryUpdateOneWithoutRegistrationNestedInput
   }
 
   export type RegistrationUncheckedUpdateInput = {
@@ -12787,7 +12802,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     eventId?: IntFieldUpdateOperationsInput | number
     referralId?: IntFieldUpdateOperationsInput | number
-    pointsHistoryId?: IntFieldUpdateOperationsInput | number
+    pointsHistoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12803,7 +12818,7 @@ export namespace Prisma {
     userId: string
     eventId: number
     referralId: number
-    pointsHistoryId: number
+    pointsHistoryId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -12828,7 +12843,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     eventId?: IntFieldUpdateOperationsInput | number
     referralId?: IntFieldUpdateOperationsInput | number
-    pointsHistoryId?: IntFieldUpdateOperationsInput | number
+    pointsHistoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13575,6 +13590,17 @@ export namespace Prisma {
     _max?: NestedEnumPaymentStatusFilter<$PrismaModel>
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type TransactionNullableRelationFilter = {
     is?: TransactionWhereInput | null
     isNot?: TransactionWhereInput | null
@@ -13588,6 +13614,11 @@ export namespace Prisma {
   export type ReferralRelationFilter = {
     is?: ReferralWhereInput
     isNot?: ReferralWhereInput
+  }
+
+  export type PointsHistoryNullableRelationFilter = {
+    is?: PointsHistoryWhereInput | null
+    isNot?: PointsHistoryWhereInput | null
   }
 
   export type RegistrationCountOrderByAggregateInput = {
@@ -13653,6 +13684,22 @@ export namespace Prisma {
     eventId?: SortOrder
     referralId?: SortOrder
     pointsHistoryId?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type StringNullableFilter<$PrismaModel = never> = {
@@ -14385,12 +14432,22 @@ export namespace Prisma {
     update?: XOR<XOR<ReferralUpdateToOneWithWhereWithoutRegistrationInput, ReferralUpdateWithoutRegistrationInput>, ReferralUncheckedUpdateWithoutRegistrationInput>
   }
 
-  export type PointsHistoryUpdateOneRequiredWithoutRegistrationNestedInput = {
+  export type PointsHistoryUpdateOneWithoutRegistrationNestedInput = {
     create?: XOR<PointsHistoryCreateWithoutRegistrationInput, PointsHistoryUncheckedCreateWithoutRegistrationInput>
     connectOrCreate?: PointsHistoryCreateOrConnectWithoutRegistrationInput
     upsert?: PointsHistoryUpsertWithoutRegistrationInput
+    disconnect?: PointsHistoryWhereInput | boolean
+    delete?: PointsHistoryWhereInput | boolean
     connect?: PointsHistoryWhereUniqueInput
     update?: XOR<XOR<PointsHistoryUpdateToOneWithWhereWithoutRegistrationInput, PointsHistoryUpdateWithoutRegistrationInput>, PointsHistoryUncheckedUpdateWithoutRegistrationInput>
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type TransactionUncheckedUpdateOneWithoutRegistrationNestedInput = {
@@ -14787,6 +14844,33 @@ export namespace Prisma {
     _max?: NestedEnumPaymentStatusFilter<$PrismaModel>
   }
 
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedStringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -14875,7 +14959,7 @@ export namespace Prisma {
     transaction?: TransactionCreateNestedOneWithoutRegistrationInput
     event: EventCreateNestedOneWithoutRegistrationsInput
     referral: ReferralCreateNestedOneWithoutRegistrationInput
-    pointsHistory: PointsHistoryCreateNestedOneWithoutRegistrationInput
+    pointsHistory?: PointsHistoryCreateNestedOneWithoutRegistrationInput
   }
 
   export type RegistrationUncheckedCreateWithoutUserInput = {
@@ -14886,7 +14970,7 @@ export namespace Prisma {
     tax: number
     eventId: number
     referralId: number
-    pointsHistoryId: number
+    pointsHistoryId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -15047,7 +15131,7 @@ export namespace Prisma {
     userId?: StringFilter<"Registration"> | string
     eventId?: IntFilter<"Registration"> | number
     referralId?: IntFilter<"Registration"> | number
-    pointsHistoryId?: IntFilter<"Registration"> | number
+    pointsHistoryId?: IntNullableFilter<"Registration"> | number | null
     createdAt?: DateTimeFilter<"Registration"> | Date | string
     updatedAt?: DateTimeFilter<"Registration"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Registration"> | Date | string | null
@@ -15428,7 +15512,7 @@ export namespace Prisma {
     transaction?: TransactionCreateNestedOneWithoutRegistrationInput
     user: UserCreateNestedOneWithoutRegistrationsInput
     event: EventCreateNestedOneWithoutRegistrationsInput
-    pointsHistory: PointsHistoryCreateNestedOneWithoutRegistrationInput
+    pointsHistory?: PointsHistoryCreateNestedOneWithoutRegistrationInput
   }
 
   export type RegistrationUncheckedCreateWithoutReferralInput = {
@@ -15439,7 +15523,7 @@ export namespace Prisma {
     tax: number
     userId: string
     eventId: number
-    pointsHistoryId: number
+    pointsHistoryId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -15597,7 +15681,7 @@ export namespace Prisma {
     transaction?: TransactionUpdateOneWithoutRegistrationNestedInput
     user?: UserUpdateOneRequiredWithoutRegistrationsNestedInput
     event?: EventUpdateOneRequiredWithoutRegistrationsNestedInput
-    pointsHistory?: PointsHistoryUpdateOneRequiredWithoutRegistrationNestedInput
+    pointsHistory?: PointsHistoryUpdateOneWithoutRegistrationNestedInput
   }
 
   export type RegistrationUncheckedUpdateWithoutReferralInput = {
@@ -15608,7 +15692,7 @@ export namespace Prisma {
     tax?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
     eventId?: IntFieldUpdateOperationsInput | number
-    pointsHistoryId?: IntFieldUpdateOperationsInput | number
+    pointsHistoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -15754,7 +15838,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutRegistrationsInput
     event: EventCreateNestedOneWithoutRegistrationsInput
     referral: ReferralCreateNestedOneWithoutRegistrationInput
-    pointsHistory: PointsHistoryCreateNestedOneWithoutRegistrationInput
+    pointsHistory?: PointsHistoryCreateNestedOneWithoutRegistrationInput
   }
 
   export type RegistrationUncheckedCreateWithoutTransactionInput = {
@@ -15766,7 +15850,7 @@ export namespace Prisma {
     userId: string
     eventId: number
     referralId: number
-    pointsHistoryId: number
+    pointsHistoryId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -15799,7 +15883,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutRegistrationsNestedInput
     event?: EventUpdateOneRequiredWithoutRegistrationsNestedInput
     referral?: ReferralUpdateOneRequiredWithoutRegistrationNestedInput
-    pointsHistory?: PointsHistoryUpdateOneRequiredWithoutRegistrationNestedInput
+    pointsHistory?: PointsHistoryUpdateOneWithoutRegistrationNestedInput
   }
 
   export type RegistrationUncheckedUpdateWithoutTransactionInput = {
@@ -15811,7 +15895,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     eventId?: IntFieldUpdateOperationsInput | number
     referralId?: IntFieldUpdateOperationsInput | number
-    pointsHistoryId?: IntFieldUpdateOperationsInput | number
+    pointsHistoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16220,7 +16304,7 @@ export namespace Prisma {
     transaction?: TransactionCreateNestedOneWithoutRegistrationInput
     user: UserCreateNestedOneWithoutRegistrationsInput
     referral: ReferralCreateNestedOneWithoutRegistrationInput
-    pointsHistory: PointsHistoryCreateNestedOneWithoutRegistrationInput
+    pointsHistory?: PointsHistoryCreateNestedOneWithoutRegistrationInput
   }
 
   export type RegistrationUncheckedCreateWithoutEventInput = {
@@ -16231,7 +16315,7 @@ export namespace Prisma {
     tax: number
     userId: string
     referralId: number
-    pointsHistoryId: number
+    pointsHistoryId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -16642,7 +16726,7 @@ export namespace Prisma {
     tax: number
     eventId: number
     referralId: number
-    pointsHistoryId: number
+    pointsHistoryId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -16706,7 +16790,7 @@ export namespace Prisma {
     transaction?: TransactionUpdateOneWithoutRegistrationNestedInput
     event?: EventUpdateOneRequiredWithoutRegistrationsNestedInput
     referral?: ReferralUpdateOneRequiredWithoutRegistrationNestedInput
-    pointsHistory?: PointsHistoryUpdateOneRequiredWithoutRegistrationNestedInput
+    pointsHistory?: PointsHistoryUpdateOneWithoutRegistrationNestedInput
   }
 
   export type RegistrationUncheckedUpdateWithoutUserInput = {
@@ -16717,7 +16801,7 @@ export namespace Prisma {
     tax?: IntFieldUpdateOperationsInput | number
     eventId?: IntFieldUpdateOperationsInput | number
     referralId?: IntFieldUpdateOperationsInput | number
-    pointsHistoryId?: IntFieldUpdateOperationsInput | number
+    pointsHistoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16732,7 +16816,7 @@ export namespace Prisma {
     tax?: IntFieldUpdateOperationsInput | number
     eventId?: IntFieldUpdateOperationsInput | number
     referralId?: IntFieldUpdateOperationsInput | number
-    pointsHistoryId?: IntFieldUpdateOperationsInput | number
+    pointsHistoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16877,7 +16961,7 @@ export namespace Prisma {
     tax: number
     userId: string
     referralId: number
-    pointsHistoryId: number
+    pointsHistoryId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -16904,7 +16988,7 @@ export namespace Prisma {
     transaction?: TransactionUpdateOneWithoutRegistrationNestedInput
     user?: UserUpdateOneRequiredWithoutRegistrationsNestedInput
     referral?: ReferralUpdateOneRequiredWithoutRegistrationNestedInput
-    pointsHistory?: PointsHistoryUpdateOneRequiredWithoutRegistrationNestedInput
+    pointsHistory?: PointsHistoryUpdateOneWithoutRegistrationNestedInput
   }
 
   export type RegistrationUncheckedUpdateWithoutEventInput = {
@@ -16915,7 +16999,7 @@ export namespace Prisma {
     tax?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
     referralId?: IntFieldUpdateOperationsInput | number
-    pointsHistoryId?: IntFieldUpdateOperationsInput | number
+    pointsHistoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16930,7 +17014,7 @@ export namespace Prisma {
     tax?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
     referralId?: IntFieldUpdateOperationsInput | number
-    pointsHistoryId?: IntFieldUpdateOperationsInput | number
+    pointsHistoryId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

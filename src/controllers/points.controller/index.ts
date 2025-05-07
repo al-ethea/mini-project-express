@@ -67,8 +67,8 @@ export const displayPointsHistory = async (
     // Combine and sort chronologically
     const pointsHistory = [...earnedPoints, ...usedPoints].sort(
       (a, b) =>
-        new Date(b.expirationDate).getTime() -
-        new Date(a.expirationDate).getTime()
+        new Date(b.expirationDate ?? 0).getTime() -
+        new Date(a.expirationDate ?? 0).getTime()
     );
 
     res.status(200).json({

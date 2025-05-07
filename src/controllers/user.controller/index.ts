@@ -33,3 +33,26 @@ export const getUserById = async (req: Request, res: Response) => {
   if (!user) return res.status(404).json({ message: 'User not found' });
   res.json({ data: user });
 };
+
+
+
+export const updateUserPoints = async (req: Request, res: Response) => {
+  const { userId } = req.body.payload;
+  const { totalPoints } = req.body;
+
+  if (!userId || totalPoints == null) {
+    return res.status(400).json({ message: "userId dan totalPoints wajib diisi." });
+  }
+
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: { totalPoints },
+    });
+
+    res.status(200).json({ message: "Points updated", data: updatedUser });
+  } catch (error) {
+    console.error("Update points error:", error);
+    res.status(500).json({ message: "Gagal update poin" });
+  }
+};

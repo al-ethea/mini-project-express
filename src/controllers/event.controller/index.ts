@@ -201,7 +201,7 @@ export const eventRegistration = async (
       discountUsed
     } = req.body;
 
-    if (!eventId || !userId || !quantity || !referralId || !pointsHistoryId) {
+    if (!eventId || !userId || !quantity) {
       return res.status(400).json({
         success: false,
         message: "Required fields are missing.",
@@ -216,7 +216,7 @@ export const eventRegistration = async (
         usedPoints: Number(usedPoints) || 0,
         tax: Number(tax) || 0,
         referralId: Number(referralId),
-        pointsHistoryId: Number(pointsHistoryId),
+        pointsHistoryId: pointsHistoryId ? Number(pointsHistoryId) : undefined,
         discountUsed: Boolean(discountUsed) || false,
       },
     });

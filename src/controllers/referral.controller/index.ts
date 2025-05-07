@@ -14,6 +14,7 @@ export const applyReferral = async (
   next: NextFunction
 ) => {
   try {
+    console.log(req.body.payload);
     const { referralCode } = req.body;
     const { userId } = req.body.payload;
 
@@ -79,3 +80,52 @@ export const applyReferral = async (
     next(error);
   }
 };
+
+//check discount
+export const checkDiscountCodeController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+
+    const { code } = req.body;
+    const { userId } = req.body.payload;
+
+    console.log(code, userId);
+
+    if (!code || !userId) {
+      return res.status(400).json({ message: "Missing code or userId" });
+    }
+
+    const referral = await prisma.referral.findFirst({
+
+      where: {
+        discountCode: code,
+        referredUserId: userId,
+      },
+    });
+
+    if (!referral) {
+      return res.status(404).json({ message: "Code not found" });
+    }
+    console.log(referral.discountStatus !== "ACTIVE");
+    if (referral.discountStatus !== "ACTIVE") {
+      console.log(">>>")
+      return res.status(400).json({
+        message: `Code is (${referral.discountStatus}), you cannot use it.`,
+        status: referral.discountStatus,
+      });
+    }
+
+    return res.status(200).json({
+      message: "Code is valid and active",
+      status: referral.discountStatus,
+      referralId: referral.id, // akan berguna untuk Registration
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+
