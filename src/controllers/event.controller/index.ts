@@ -83,22 +83,20 @@ export const createEvent = async (
 
     // Konversi dan validasi data
     const formattedDate = new Date(date); // cukup langsung new Date
-    const parsedPrice = Number(price);
     const parsedAvailableSeats = Number(availableSeats);
     const parsedArtistId = Number(artistId);
-    // const parsedOrganizerProfileId = Number(organizerProfileId);
 
-    if (
-      isNaN(parsedPrice) ||
-      isNaN(parsedAvailableSeats) ||
-      isNaN(parsedArtistId)
-      // ||
-      // isNaN(parsedOrganizerProfileId)
-    ) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid numeric input.",
-      });
+    let parsedPrice = 0;
+    if (type === "free") {
+      parsedPrice = 0;
+    } else {
+      parsedPrice = Number(price);
+      if (isNaN(parsedPrice)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid price input.",
+        });
+      }
     }
 
     // ===== Cloudinary Image Upload =====
@@ -107,7 +105,7 @@ export const createEvent = async (
     let files: Express.Multer.File[] | undefined;
     if (req.files) {
       // ambil file yg di-upload dr multer
-      files = Array.isArray(req.files) ? req.files : req.files["image"];
+      files = Array.isArray(req.files) ? req.files : req.files["bannerUrl"];
 
       // upload multiple files ke cloudinary
       for (const image of files) {

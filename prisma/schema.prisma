@@ -61,7 +61,8 @@ model OrganizerProfile { // one to one user
 model Referral{
   id              Int      @id @default(autoincrement())
   discountCode String
-  discountStatus discountStatus @default(ACTIVE)
+  discountStatus DiscountStatus @default(ACTIVE)
+  discountExpireAt DateTime
 
   referralGiverUserId String
   givenBy User @relation("givenBy", fields: [referralGiverUserId], references: [id])
@@ -76,6 +77,8 @@ model Referral{
   registration Registration?
 
   createdAt DateTime @default(now())
+  deletedAt DateTime?
+  updatedAt DateTime @updatedAt
 
   @@map("referrals")
 }
@@ -84,6 +87,7 @@ model PointsHistory{
   id Int @id @default(autoincrement())
   amount Int
   expirationDate DateTime
+  pointsStatus PointsStatus @default(ACTIVE)
 
   // 1 to 1 regis optional
   // poin berkurang
@@ -94,6 +98,8 @@ model PointsHistory{
   referral Referral?
 
   createdAt DateTime @default(now())
+  deletedAt DateTime?
+  updatedAt DateTime @updatedAt
   @@map("points_history")
 }
 
@@ -215,7 +221,13 @@ enum PaymentStatus{
   EXPIRED
 }
 
-enum discountStatus{
+enum DiscountStatus{
+  USED
+  ACTIVE
+  EXPIRED
+}
+
+enum PointsStatus{
   USED
   ACTIVE
   EXPIRED

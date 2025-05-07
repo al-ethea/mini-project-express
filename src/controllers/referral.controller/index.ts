@@ -59,6 +59,7 @@ export const applyReferral = async (
           referralGiverUserId: referrer.id,
           referredUserId: user.id,
           pointsHistoryId: pointsHistory.id,
+          discountExpireAt: addMonths(new Date(), 3),
         },
       });
       // update referrer totalPoints

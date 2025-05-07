@@ -17,7 +17,7 @@ eventRouter.get("/all-events", eventDisplayLists, carouselEvents);
 eventRouter.post(
   "/create-events",
   uploader(["image/jpg", "image/jpeg", "image/png", "image/webp"]).fields([
-    { name: "image", maxCount: 1 },
+    { name: "bannerUrl", maxCount: 1 },
   ]),
   jwtDecode,
   verifiedOrganizerOnly,

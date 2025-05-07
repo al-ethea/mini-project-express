@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../../connection";
 import { AppError } from "../../utils/app.error";
+import { addMonths } from "../../utils/calculate.expiration.date";
 
 export const displayPointsHistory = async (
   req: Request,
@@ -10,7 +11,7 @@ export const displayPointsHistory = async (
   try {
     const { userId } = req.body.payload;
 
-    // Get user to validate existence and fetch related point records
+    // Validate user existence and fetch relevant data
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: {
@@ -40,36 +41,39 @@ export const displayPointsHistory = async (
     if (!user) {
       throw AppError("User not found", 404);
     }
-    // Points used during registration (decrease)
-    const usedPoints = user.registrations
-      .filter((reg) => reg.pointsHistory)
-      .map((reg) => ({
+
+    // Points used during registration
+    const usedPoints = user.registrations.flatMap((reg) => {
+      if (!reg.pointsHistory) return [];
+      return {
         type: "USED",
-        amount: reg.pointsHistory?.amount,
-        expirationDate: reg.pointsHistory?.expirationDate,
+        amount: reg.pointsHistory.amount,
+        expirationDate: addMonths(reg.createdAt, 3),
         eventName: reg.event.name,
         registrationId: reg.id,
         usedAt: reg.createdAt,
-      }));
+      };
+    });
 
-    // Points earned from giving referrals (increase)
-    const earnedPoints = user.givenBy
-      .filter((ref) => ref.pointsHistory)
-      .map((ref) => ({
+    // Points earned through referrals
+    const earnedPoints = user.givenBy.flatMap((ref) => {
+      if (!ref.pointsHistory) return [];
+      return {
         type: "EARNED",
-        amount: ref.pointsHistory?.amount,
-        expirationDate: ref.pointsHistory?.expirationDate,
+        amount: ref.pointsHistory.amount,
+        expirationDate: addMonths(ref.createdAt, 3),
         referredUser: ref.referredTo,
         discountCode: ref.discountCode,
         earnedAt: ref.createdAt,
-      }));
+      };
+    });
 
-    // Combine and sort chronologically
-    const pointsHistory = [...earnedPoints, ...usedPoints].sort(
-      (a, b) =>
-        new Date(b.expirationDate).getTime() -
-        new Date(a.expirationDate).getTime()
-    );
+    // Combine and sort by expiration date (descending)
+    const pointsHistory = [...earnedPoints, ...usedPoints].sort((a, b) => {
+      const dateA = a.expirationDate ? new Date(a.expirationDate).getTime() : 0;
+      const dateB = b.expirationDate ? new Date(b.expirationDate).getTime() : 0;
+      return dateB - dateA;
+    });
 
     res.status(200).json({
       success: true,
@@ -78,6 +82,7 @@ export const displayPointsHistory = async (
       pointsHistory,
     });
   } catch (error) {
+    console.error("Error in displayPointsHistory:", error);
     next(error);
   }
 };

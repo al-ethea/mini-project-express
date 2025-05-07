@@ -42,75 +42,76 @@ const artist = [
 ];
 
 const users = [
-  // {
-  //   firstName: "Alice",
-  //   lastName: "Johnson",
-  //   email: "alice@example.com",
-  //   postcode: "12345",
-  //   password: "password123",
-  //   role: "ATTENDEE",
-  //   referralCode: "ALI123",
-  //   totalPoints: 0,
-  // },
-  // {
-  //   firstName: "Bob",
-  //   lastName: "Smith",
-  //   email: "bob@example.com",
-  //   postcode: "54321",
-  //   password: "secret456",
-  //   role: "ORGANIZER",
-  //   referralCode: "BOB456",
-  //   totalPoints: 0,
-  // },
-  // {
-  //   firstName: "Latriel",
-  //   lastName: "Walker",
-  //   email: "lateriel.walker@example.com",
-  //   postcode: "10101",
-  //   password: "password123",
-  //   role: "ATTENDEE",
-  //   referralCode: "LAT789",
-  //   totalPoints: 0,
-  // },
-  // {
-  //   firstName: "Benjamin",
-  //   lastName: "Stone",
-  //   email: "jigisoj435@harinv.com",
-  //   postcode: "10202",
-  //   password: "secure456",
-  //   role: "ORGANIZER",
-  //   referralCode: "BEN101",
-  //   totalPoints: 0,
-  // },
-  // {
-  //   firstName: "Carla",
-  //   lastName: "Mitchell",
-  //   email: "carla.m@example.com",
-  //   postcode: "10303",
-  //   password: "abc123xyz",
-  //   role: "ATTENDEE",
-  //   referralCode: "CAR202",
-  //   totalPoints: 0,
-  // },
-  // {
-  //   firstName: "Alex",
-  //   lastName: "Johnson",
-  //   postcode: "78965",
-  //   email: "sosed84911@miracle3.com",
-  //   password: "Pass123!",
-  //   role: "ATTENDEE",
-  //   referralCode: "QNI692",
-  //   totalPoints: 0,
-  // },
-  // {
-  //   firstName: "David",
-  //   lastName: "Miller",
-  //   postcode: "90210",
-  //   email: "sowome1174@harinv.com",
-  //   password: "SafePass789!",
-  //   referralCode: "ZFB956",
-  //   totalPoints: 0,
-  // },
+  {
+    firstName: "Alice",
+    lastName: "Johnson",
+    email: "alice@example.com",
+    postcode: "12345",
+    password: "password123",
+    role: "ATTENDEE",
+    referralCode: "ALI123",
+    totalPoints: 0,
+  },
+  {
+    firstName: "Bob",
+    lastName: "Smith",
+    email: "bob@example.com",
+    postcode: "54321",
+    password: "secret456",
+    role: "ATTENDEE",
+    referralCode: "BOB456",
+    totalPoints: 0,
+  },
+  {
+    firstName: "Latriel",
+    lastName: "Walker",
+    email: "lateriel.walker@example.com",
+    postcode: "10101",
+    password: "password123",
+    role: "ATTENDEE",
+    referralCode: "LAT789",
+    totalPoints: 0,
+  },
+  {
+    firstName: "Benjamin",
+    lastName: "Stone",
+    email: "jigisoj435@harinv.com",
+    postcode: "10202",
+    password: "secure456",
+    role: "ATTENDEE",
+    referralCode: "BEN101",
+    totalPoints: 0,
+  },
+  {
+    firstName: "Carla",
+    lastName: "Mitchell",
+    email: "carla.m@example.com",
+    postcode: "10303",
+    password: "abc123xyz",
+    role: "ATTENDEE",
+    referralCode: "CAR202",
+    totalPoints: 0,
+  },
+  {
+    firstName: "Alex",
+    lastName: "Johnson",
+    postcode: "78965",
+    email: "sosed84911@miracle3.com",
+    password: "Pass123!",
+    role: "ATTENDEE",
+    referralCode: "QNI692",
+    totalPoints: 0,
+  },
+  {
+    firstName: "David",
+    lastName: "Miller",
+    postcode: "90210",
+    email: "sowome1174@harinv.com",
+    password: "SafePass789!",
+    role: "ATTENDEE",
+    referralCode: "ZFB956",
+    totalPoints: 0,
+  },
   {
     firstName: "Clara",
     lastName: "Mendez",
@@ -287,20 +288,20 @@ const organizerProfile = [
 // }
 
 async function main() {
-  for (const item of users) {
-    const hashed = await hashPassword(item.password);
-    await prisma.user.create({
-      data: {
-        ...item,
-        password: hashed,
-      },
+  // for (const item of users) {
+  //   const hashed = await hashPassword(item.password);
+  //   await prisma.user.create({
+  //     data: {
+  //       ...item,
+  //       password: hashed,
+  //     },
+  //   });
+  // }
+  for (const item of artist) {
+    await prisma.artist.create({
+      data: item,
     });
   }
-  //   for (const item of artist) {
-  //     await prisma.artist.create({
-  //       data: item,
-  //     });
-  //   }
   //   for (const item of event) {
   //     await prisma.event.create({
   //       data: item,
