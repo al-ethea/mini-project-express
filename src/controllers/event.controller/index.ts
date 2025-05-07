@@ -3,8 +3,9 @@
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../../connection";
 import { AppError } from "../../utils/app.error";
-import jwt from 'jsonwebtoken';
-import bodyParser from 'body-parser';
+import jwt from "jsonwebtoken";
+import bodyParser from "body-parser";
+import { cloudinaryUpload } from "../../utils/cloudinary.upload";
 
 // fetch all events for organizer
 // done
@@ -14,11 +15,12 @@ export const getCreatedEvents = async (
   next: NextFunction
 ) => {
   try {
-    const { organizerProfileId } = req.body.payload;
+    const { userId } = req.body.payload;
+    // console.log("Organizer Profile ID:", userId);
 
     const findOrganizerById = await prisma.organizerProfile.findFirst({
       where: {
-        userId: organizerProfileId,
+        userId: userId,
       },
     });
 
@@ -56,9 +58,17 @@ export const createEvent = async (
   next: NextFunction
 ) => {
   try {
+    const { userId } = req.body.payload;
+    const organizerProfile = await prisma.organizerProfile.findFirst({
+      where: { userId: userId },
+    });
+
+    if (!organizerProfile) {
+      throw AppError("Organizer profile not found", 404);
+    }
+
     const {
       name,
-      bannerUrl,
       city,
       venue,
       date,
@@ -68,7 +78,7 @@ export const createEvent = async (
       availableSeats,
       type,
       artistId,
-      organizerProfileId,
+      // organizerProfileId,
     } = req.body;
 
     // Konversi dan validasi data
@@ -76,24 +86,44 @@ export const createEvent = async (
     const parsedPrice = Number(price);
     const parsedAvailableSeats = Number(availableSeats);
     const parsedArtistId = Number(artistId);
-    const parsedOrganizerProfileId = Number(organizerProfileId);
+    // const parsedOrganizerProfileId = Number(organizerProfileId);
 
     if (
       isNaN(parsedPrice) ||
       isNaN(parsedAvailableSeats) ||
-      isNaN(parsedArtistId) ||
-      isNaN(parsedOrganizerProfileId)
+      isNaN(parsedArtistId)
+      // ||
+      // isNaN(parsedOrganizerProfileId)
     ) {
       return res.status(400).json({
         success: false,
-        message: "Input numerik tidak valid.",
+        message: "Invalid numeric input.",
       });
     }
+
+    // ===== Cloudinary Image Upload =====
+
+    const bannerUrl = [];
+    let files: Express.Multer.File[] | undefined;
+    if (req.files) {
+      // ambil file yg di-upload dr multer
+      files = Array.isArray(req.files) ? req.files : req.files["image"];
+
+      // upload multiple files ke cloudinary
+      for (const image of files) {
+        // console.log(image);
+        const result: any = await cloudinaryUpload(image.buffer);
+
+        console.log(result);
+        bannerUrl.push(result.res);
+      }
+    }
+    console.log(bannerUrl);
 
     const newEvent = await prisma.event.create({
       data: {
         name,
-        bannerUrl,
+        bannerUrl: bannerUrl[0],
         city,
         venue,
         date: formattedDate,
@@ -103,13 +133,13 @@ export const createEvent = async (
         availableSeats: parsedAvailableSeats,
         type,
         artistId: parsedArtistId,
-        organizerProfileId: parsedOrganizerProfileId,
+        organizerProfileId: organizerProfile.id,
       },
     });
 
     res.status(201).json({
       success: true,
-      message: "Created successfully.",
+      message: "Created event successfully.",
       data: newEvent,
     });
   } catch (error) {
@@ -183,7 +213,6 @@ export const getEventById = async (
   }
 };
 
-
 export const eventRegistration = async (
   req: Request,
   res: Response,
@@ -198,7 +227,7 @@ export const eventRegistration = async (
       tax,
       referralId,
       pointsHistoryId,
-      discountUsed
+      discountUsed,
     } = req.body;
 
     if (!eventId || !userId || !quantity || !referralId || !pointsHistoryId) {
@@ -239,21 +268,21 @@ export const carouselEvents = async (
 ) => {
   try {
     const limit = parseInt(req.query.limit as string) || 6;
-    
+
     // Contoh: Ambil event yang akan datang, bisa disesuaikan dengan kebutuhan
     const carouselEvents = await prisma.event.findMany({
       take: limit,
       where: {
         date: {
-          gte: new Date() // Hanya event yang tanggalnya belum lewat
-        }
+          gte: new Date(), // Hanya event yang tanggalnya belum lewat
+        },
       },
       orderBy: { date: "asc" },
       select: {
         id: true,
         name: true,
-        bannerUrl: true
-      }
+        bannerUrl: true,
+      },
     });
 
     res.status(200).json(carouselEvents);

@@ -115,9 +115,25 @@ export const loginUser = async (
       throw AppError("Invalid password", 401);
     }
 
+    let verifiedOrganizer: { verified: boolean } | null = null;
+
+    if (findUserByEmail.role === "ORGANIZER") {
+      verifiedOrganizer = await prisma.organizerProfile.findFirst({
+        select: {
+          verified: true,
+        },
+        where: {
+          userId: findUserByEmail.id,
+        },
+      });
+    } else {
+      verifiedOrganizer = { verified: false };
+    }
+
     const token = jwtSign({
       userId: findUserByEmail.id,
       userRole: findUserByEmail.role,
+      verified: verifiedOrganizer?.verified,
     });
 
     res.status(200).json({

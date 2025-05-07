@@ -6,6 +6,8 @@ import organizerRouter from "./routers/organizer.router";
 import eventRouter from "./routers/event.router";
 import userRouter from "./routers/user.router";
 import pointsRouter from "./routers/points.router";
+import artistRouter from "./routers/artist.router";
+import transactionRouter from "./routers/transaction.router";
 
 const app: Express = express();
 const port = 5005;
@@ -26,7 +28,8 @@ app.use("/api/organizer", organizerRouter);
 app.use("/api/events", eventRouter);
 app.use("/api/users", userRouter);
 app.use("/api/points", pointsRouter);
-
+app.use("/api/artists", artistRouter);
+app.use("/api/transactions", transactionRouter);
 
 // Centralized Error
 interface IError extends Error {

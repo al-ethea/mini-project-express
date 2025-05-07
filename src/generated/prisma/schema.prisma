@@ -100,10 +100,11 @@ model PointsHistory {
 }
 
 model Transaction {
-  id             Int           @id @default(autoincrement())
-  paymentStatus  PaymentStatus
-  expireAt       DateTime
-  amountToBePaid Int
+  id                Int           @id @default(autoincrement())
+  paymentStatus     PaymentStatus
+  expireAt          DateTime
+  amountToBePaid    Int
+  paymentReceiptUrl String?
 
   registrationId Int          @unique
   registration   Registration @relation(fields: [registrationId], references: [id])

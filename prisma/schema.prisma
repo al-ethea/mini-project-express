@@ -102,6 +102,7 @@ model Transaction{
   paymentStatus PaymentStatus
   expireAt DateTime
   amountToBePaid Int
+  paymentReceiptUrl String?
 
   registrationId Int @unique
   registration Registration @relation(fields: [registrationId], references: [id])
@@ -127,11 +128,11 @@ model Registration{ // many
   eventId Int
   event Event @relation(fields: [eventId], references: [id])
 
-  referralId Int @unique
-  referral Referral @relation(fields: [referralId], references: [id])
+  referralId Int? @unique
+  referral Referral? @relation(fields: [referralId], references: [id])
 
-  pointsHistoryId Int @unique
-  pointsHistory PointsHistory @relation(fields: [pointsHistoryId], references: [id])
+  pointsHistoryId Int? @unique
+  pointsHistory PointsHistory? @relation(fields: [pointsHistoryId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
