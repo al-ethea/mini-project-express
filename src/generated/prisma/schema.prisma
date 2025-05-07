@@ -60,9 +60,10 @@ model OrganizerProfile {
 }
 
 model Referral {
-  id             Int            @id @default(autoincrement())
-  discountCode   String
-  discountStatus discountStatus @default(ACTIVE)
+  id               Int            @id @default(autoincrement())
+  discountCode     String
+  discountStatus   DiscountStatus @default(ACTIVE)
+  discountExpireAt DateTime
 
   referralGiverUserId String
   givenBy             User   @relation("givenBy", fields: [referralGiverUserId], references: [id])
@@ -76,15 +77,18 @@ model Referral {
   // 1 to 1 regis optional
   registration Registration?
 
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+  updatedAt DateTime  @updatedAt
 
   @@map("referrals")
 }
 
 model PointsHistory {
-  id             Int      @id @default(autoincrement())
+  id             Int          @id @default(autoincrement())
   amount         Int
   expirationDate DateTime
+  pointsStatus   PointsStatus @default(ACTIVE)
 
   // 1 to 1 regis optional
   // poin berkurang
@@ -94,7 +98,9 @@ model PointsHistory {
   //poin bertambah
   referral Referral?
 
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+  updatedAt DateTime  @updatedAt
 
   @@map("points_history")
 }
@@ -131,11 +137,11 @@ model Registration {
   eventId Int
   event   Event @relation(fields: [eventId], references: [id])
 
-  referralId Int      @unique
-  referral   Referral @relation(fields: [referralId], references: [id])
+  referralId Int?      @unique
+  referral   Referral? @relation(fields: [referralId], references: [id])
 
-  pointsHistoryId Int           @unique
-  pointsHistory   PointsHistory @relation(fields: [pointsHistoryId], references: [id])
+  pointsHistoryId Int?           @unique
+  pointsHistory   PointsHistory? @relation(fields: [pointsHistoryId], references: [id])
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -221,7 +227,13 @@ enum PaymentStatus {
   EXPIRED
 }
 
-enum discountStatus {
+enum DiscountStatus {
+  USED
+  ACTIVE
+  EXPIRED
+}
+
+enum PointsStatus {
   USED
   ACTIVE
   EXPIRED

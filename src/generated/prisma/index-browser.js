@@ -153,17 +153,23 @@ exports.Prisma.ReferralScalarFieldEnum = {
   id: 'id',
   discountCode: 'discountCode',
   discountStatus: 'discountStatus',
+  discountExpireAt: 'discountExpireAt',
   referralGiverUserId: 'referralGiverUserId',
   referredUserId: 'referredUserId',
   pointsHistoryId: 'pointsHistoryId',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  deletedAt: 'deletedAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.PointsHistoryScalarFieldEnum = {
   id: 'id',
   amount: 'amount',
   expirationDate: 'expirationDate',
-  createdAt: 'createdAt'
+  pointsStatus: 'pointsStatus',
+  createdAt: 'createdAt',
+  deletedAt: 'deletedAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.TransactionScalarFieldEnum = {
@@ -252,7 +258,13 @@ exports.Role = exports.$Enums.Role = {
   ORGANIZER: 'ORGANIZER'
 };
 
-exports.discountStatus = exports.$Enums.discountStatus = {
+exports.DiscountStatus = exports.$Enums.DiscountStatus = {
+  USED: 'USED',
+  ACTIVE: 'ACTIVE',
+  EXPIRED: 'EXPIRED'
+};
+
+exports.PointsStatus = exports.$Enums.PointsStatus = {
   USED: 'USED',
   ACTIVE: 'ACTIVE',
   EXPIRED: 'EXPIRED'
